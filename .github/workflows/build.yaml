@@ -2,8 +2,9 @@ name: Build and Deploy
 
 on:
   push:
-    branches:
-      - "master"
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build_and_test:
@@ -22,6 +23,6 @@ jobs:
 
       - name: Building Plugin
         run: npm run build:ci
-        
+
       - name: Testing Plugin
         run: npm run test:ci
