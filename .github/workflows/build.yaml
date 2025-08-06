@@ -28,4 +28,4 @@ jobs:
       run: npm run build
 
     - name: Testing Plugin
-      run: ng test --browsers ChromeHeadless
+      run: ng test  --watch=false --browsers=ChromeHeadless
