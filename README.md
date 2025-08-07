@@ -1,4 +1,4 @@
-# NgwebFormError
+# NgwebForm
 
 This project is angular plugin made to make show errors in angular application as easy
 as possible when using reactive form module.
