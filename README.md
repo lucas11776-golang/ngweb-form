@@ -1,59 +1,192 @@
 # NgwebFormError
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.9.
+This project is angular plugin made to make show errors in angular application as easy
+as possible when using reactive form module.
 
-## Development server
+## Getting Started
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+To get started with NgwebFormError, run:
 
 ```bash
-ng generate component component-name
+npm i ngweb-form-error
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Usage
 
-```bash
-ng generate --help
+First let`s look at our component called login.component.ts we will be using `@rxweb/reactive-form-validators`
+as validator and bootstrap as css framework.
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { NgwebFormModule } from 'ngweb-form-error';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
+  imports: [
+    NgwebFormModule
+  ],
+})
+export class LoginTestComponent implements OnInit {
+  form: FormGroup;
+
+  constructor(private builder: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.form = this.builder.group({
+      "email": [null, [RxwebValidators.required({message: 'The email is required'})]],
+      "password": [null, [RxwebValidators.required({message: 'The password is required'})]],
+    });
+  }
+}
 ```
 
-## Building
+Now let`s setup our template
 
-To build the project run:
-
-```bash
-ng build
+```html
+<div class="container mt-5 mb-5">
+    <form [formGroup]="form">
+        <!-- Login Error Alert -->
+        <div class="mb-3" *ngIf="errors.message">
+            <div class="alert alert-danger" role="alert">
+                <strong>{{ errors.message }}</strong>
+            </div>
+        </div>
+        <!-- Email Input -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input name="email"
+                   type="email"
+                   class="form-control"
+                   id="email"
+                   placeholder="john@deo.com"
+                   formControlName="email"
+                   [ngwebFormInputError]="[form, 'email', false]"
+                   [ngwebFormInputErrorClass]="'is-invalid'"
+                   [ngwebFormInputErrorExternal]="formErrors?.errors?.email">
+            <div [ngwebFormInputErrorMessage]="[form, 'email', false]"
+                 [ngwebFormInputErrorMessageClass]="'invalid-feedback'"
+                 [ngwebFormInputErrorMessageExternal]="formErrors?.errors?.email">
+            </div>
+        </div>
+        <!-- Password Input -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input name="password"
+                   type="password"
+                   class="form-control"
+                   id="password"
+                   placeholder="********"
+                   formControlName="password"
+                   [ngwebFormInputError]="[form, 'password', false]"
+                   [ngwebFormInputErrorClass]="'is-invalid'"
+                   [ngwebFormInputErrorExternal]="formErrors?.errors?.password">
+            <div [ngwebFormInputErrorMessage]="[form, 'password', false]"
+                 [ngwebFormInputErrorMessageClass]="'invalid-feedback'"
+                 [ngwebFormInputErrorMessageExternal]="formErrors?.errors?.password">
+        </div>
+        <!-- Login Button -->
+        <button type="submit" class="btn btn-primary w-100 mt-2" (click)="login()">
+            Login
+        </button>
+    </form>
+</div>
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Now you should see error message for email and password.
 
-## Running unit tests
+## Options
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### ngwebFormInputError
 
-```bash
-ng test
+`[ngwebFormInputError]="[form, 'password', false]"`: [`FormGroup`, `formControlName`, `isDirty`].
+`[ngwebFormInputErrorClass]`: `class to add is the is error`.
+`[ngwebFormInputErrorExternal]`: `external error from server`.
+
+### ngwebFormInputErrorMessage
+
+`[ngwebFormInputErrorMessage]="[form, 'password', false]"`: [`FormGroup`, `formControlName`, `isDirty`].
+`[ngwebFormInputErrorMessageClass]`: `class to add is the is error`.
+`[ngwebFormInputErrorMessageExternal]`: `external error from server`.
+
+## Extras
+
+If you as using `@rxweb/reactive-form-validators` stop filling errors message in components do it in your
+`app.component.ts` or `app.config.ts`.
+
+```typescript
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+
+import { routes } from './app.routes';
+import { ReactiveFormConfig } from '@rxweb/reactive-form-validators';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+  ]
+};
+
+ReactiveFormConfig.set({
+  "validationMessage": {
+    allOf: 'All values must match the allowed set',
+    alpha: 'Only alphabetic characters are allowed',
+    alphaNumeric: 'Only alphanumeric characters are allowed',
+    ascii: 'Only ASCII characters are allowed',
+    choice: 'Invalid choice selected',
+    compare: 'Values do not match',
+    compose: 'Composite validation failed',
+    contains: 'Value must contain "{{1}}"',
+    creditCard: 'Invalid credit card number',
+    dataUri: 'Invalid Data URI format',
+    different: 'Value must be different from "{{1}}"',
+    digit: 'Only digits are allowed',
+    email: 'Invalid email address',
+    endsWith: 'Value must end with "{{1}}"',
+    even: 'Only even numbers are allowed',
+    extension: 'Invalid file extension',
+    factor: 'Number must be a factor of "{{1}}"',
+    file: 'Invalid file format',
+    fileSize: 'File size must not exceed {{1}} KB',
+    greaterThanEqualTo: 'Value must be greater than or equal to {{1}}',
+    greaterThan: 'Value must be greater than {{1}}',
+    ip: 'Invalid IP address',
+    image: 'Invalid image format',
+    hexColor: 'Invalid HEX color code',
+    json: 'Invalid JSON format',
+    latitude: 'Invalid latitude value',
+    latLong: 'Invalid latitude/longitude format',
+    leapYear: 'Year must be a leap year',
+    lessThanEqualTo: 'Value must be less than or equal to {{1}}',
+    lessThan: 'Value must be less than {{1}}',
+    longitude: 'Invalid longitude value',
+    lowerCase: 'Value must be in lowercase',
+    mac: 'Invalid MAC address',
+    maxDate: 'Date must be before or equal to {{1}}',
+    maxLength: 'Maximum length is {{1}} characters',
+    maxNumber: 'Value must not exceed {{1}}',
+    minDate: 'Date must be after or equal to {{1}}',
+    minLength: 'Minimum length is {{1}} characters',
+    minNumber: 'Value must be at least {{1}}',
+    noneOf: 'Value must not match any of the restricted options',
+    numeric: 'Only numeric values are allowed',
+    odd: 'Only odd numbers are allowed',
+    oneOf: 'Value must be one of the allowed options',
+    password: 'Password does not meet strength requirements',
+    pattern: 'Value does not match required pattern',
+    port: 'Invalid port number',
+    primeNumber: 'Value must be a prime number',
+    range: 'Value must be between {{1}} and {{2}}',
+    required: 'This field is required',
+    startsWith: 'Value must start with "{{1}}"',
+    time: 'Invalid time format (HH:mm:ss)',
+    unique: 'Value must be unique',
+    upperCase: 'Value must be in uppercase',
+    url: 'Invalid URL format'
+  }
+});
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
