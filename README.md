@@ -20,8 +20,7 @@ as validator and bootstrap as css framework.
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { NgwebFormModule } from 'ngweb-form-error';
-
+import { NgwebFormModule } from 'ngweb-form';
 
 interface RequestFormError {
   message: string;
@@ -53,7 +52,6 @@ export class LoginTestComponent implements OnInit {
     // Some login logic...
   }
 }
-
 ```
 
 Now let`s setup our template
@@ -114,15 +112,15 @@ Now you should see error message for email and password.
 
 ### ngwebFormInputError
 
-`[ngwebFormInputError]="[form, 'password', false]"`: [`FormGroup`, `formControlName`, `isDirty`].
-`[ngwebFormInputErrorClass]`: `class to add is the is error`.
-`[ngwebFormInputErrorExternal]`: `external error from server`.
+`[ngwebFormInputError]`: `[`FormGroup, formControlName, isDirty`]`.
+`[ngwebFormInputErrorClass]`: class to add is the is an error.
+`[ngwebFormInputErrorExternal]`: external error from server.
 
 ### ngwebFormInputErrorMessage
 
-`[ngwebFormInputErrorMessage]="[form, 'password', false]"`: [`FormGroup`, `formControlName`, `isDirty`].
-`[ngwebFormInputErrorMessageClass]`: `class to add is the is error`.
-`[ngwebFormInputErrorMessageExternal]`: `external error from server`.
+`[ngwebFormInputErrorMessage]`: `[`FormGroup, formControlName, isDirty`]`.
+`[ngwebFormInputErrorMessageClass]`: class to add is the is error.
+`[ngwebFormInputErrorMessageExternal]`: external error from server.
 
 ## Extras
 
