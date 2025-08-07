@@ -13,7 +13,7 @@ npm i ngweb-form-error
 
 ## Usage
 
-First let's look at our component called login.component.ts we will be using `@rxweb/reactive-form-validators`
+First let's look at our component called `login.component.ts` we will be using `@rxweb/reactive-form-validators`
 as validator and bootstrap as css framework.
 
 ```typescript
@@ -21,6 +21,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { NgwebFormModule } from 'ngweb-form-error';
+
+
+interface RequestFormError {
+  message: string;
+  errors: {[error: string]: string};
+}
 
 @Component({
   selector: 'app-login',
@@ -32,6 +38,7 @@ import { NgwebFormModule } from 'ngweb-form-error';
 })
 export class LoginTestComponent implements OnInit {
   form: FormGroup;
+  formErrors: RequestFormError;
 
   constructor(private builder: FormBuilder) {}
 
@@ -41,7 +48,12 @@ export class LoginTestComponent implements OnInit {
       "password": [null, [RxwebValidators.required({message: 'The password is required'})]],
     });
   }
+
+  login(): void {
+    // Some login logic...
+  }
 }
+
 ```
 
 Now let`s setup our template
