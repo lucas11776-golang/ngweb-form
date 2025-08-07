@@ -13,7 +13,7 @@ npm i ngweb-form-error
 
 ## Usage
 
-First let`s look at our component called login.component.ts we will be using `@rxweb/reactive-form-validators`
+First let's look at our component called login.component.ts we will be using `@rxweb/reactive-form-validators`
 as validator and bootstrap as css framework.
 
 ```typescript
